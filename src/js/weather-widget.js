@@ -38,14 +38,23 @@ function createMarkup(response) {
   const date = new Date();
   const markup = `<div class="weather-info">
       <span class="temperature">${response.main.temp.toFixed(0)}&#176;</span>
-      <span class="divider"></span>
-      <span class="weather-description">${response.weather[0].main}</span>
-      <span class="geolocation">${response.name}</span>
-      </span>
-    </div>
+      <span class="divider"></span></div>
+      <div><span class="weather-description">${response.weather[0].main}</span>
+      <svg class="location-icon" width="18" height="18">
+      <use href="../images/icons.svg#icon-location"></use></svg>
+      <span class="location">${response.name}</span></div>
+      <img src="https://openweathermap.org/img/wn/${
+        response.weather[0].icon
+      }@2x.png" alt="${
+    response.weather[0].main
+  }" class="weather-icon" width=128 height=121>
+      
+    
     <div class="date">${formattedDate.getFormattedDay(
       date
-    )} ${date.getDate()} ${formattedDate.getFormattedMonth(date)}</div>
+    )} ${date.getDate()} ${formattedDate.getFormattedMonth(
+    date
+  )} ${date.getFullYear()}</div>
   </div>`;
   showWeather(markup);
 }

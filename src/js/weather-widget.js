@@ -1,5 +1,6 @@
 const refs = {
-  weatherWidget: document.querySelector('.weather-widget'),
+  weatherWidget: document.querySelector('.weather__widget'),
+  list: document.querySelectorAll('.item'),
 };
 
 export function checkResult(response) {
@@ -36,13 +37,16 @@ function createMarkup(response) {
     },
   };
   const date = new Date();
-  const markup = `<div class="weather-info">
+  const markup = `<div class="weather__content">
+      <div class="weather__wrapper">
       <span class="temperature">${response.main.temp.toFixed(0)}&#176;</span>
-      <span class="divider"></span></div>
-      <div><span class="weather-description">${response.weather[0].main}</span>
-      <svg class="location-icon" width="18" height="18">
-      <use href="../images/icons.svg#icon-location"></use></svg>
-      <span class="location">${response.name}</span></div>
+      <div class="weather__wrapper weather__wrapper--column">
+      <span class="description">${response.weather[0].main}</span>
+      <div class="weather__wrapper weather__wrapper--accent">
+      <svg class="location-icon">
+  <use href="./images/icons.svg#icon-location"></use>
+</svg>
+      <span class="location">${response.name}</span></div></div></div>
       <img src="https://openweathermap.org/img/wn/${
         response.weather[0].icon
       }@2x.png" alt="${
@@ -52,7 +56,7 @@ function createMarkup(response) {
     
     <div class="date">${formattedDate.getFormattedDay(
       date
-    )} ${date.getDate()} ${formattedDate.getFormattedMonth(
+    )} <br /> ${date.getDate()} ${formattedDate.getFormattedMonth(
     date
   )} ${date.getFullYear()}</div>
   </div>`;
@@ -60,5 +64,8 @@ function createMarkup(response) {
 }
 
 function showWeather(markup) {
-  refs.weatherWidget.insertAdjacentHTML('beforeend', markup);
+  // refs.weatherWidget.insertAdjacentHTML('beforeend', markup);
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    refs.list[1].insertAdjacentElement('afterend', markup);
+  }
 }

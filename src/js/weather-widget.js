@@ -1,46 +1,15 @@
 const refs = {
-  weatherWidget: document.querySelector('.weather__widget'),
-  list: document.querySelectorAll('.item'),
+  list: document.querySelector('.list'),
+  listItems: document.querySelectorAll('.item'),
 };
 
 const mediaList = {
-  mobile: '(min-width: 480px)',
-  tablet: '(min-width: 768px)',
-  desktop: '(min-width: 1200px)',
+  mobile: window.matchMedia('(min-width: 320px) and (max-width: 767px)'),
+  tablet: window.matchMedia('(min-width: 768px) and (max-width: 1199px)'),
+  desktop: window.matchMedia('(min-width: 1200px)'),
 };
-console.log(window.innerWidth);
-window.matchMedia(`${mediaList.tablet}`).addEventListener('change', show);
-show(window.matchMedia(`${mediaList.tablet}`));
-function show(e) {
-  console.log(e);
-  if (document.innerWidth > 768) {
-    console.log('remove is working');
-    refs.list[0].parentNode.replaceChild(refs.weatherWidget, refs.list[0]);
-  }
-}
-// const mediaQueryList = window.matchMedia('(min-width: 768px)');
-// window
-//   .matchMedia(mediaList.mobile)
-//   .addEventListener('change', handleTabletChange);
-// window
-//   .matchMedia(mediaList.tablet)
-//   .addEventListener('change', handleTabletChange);
-// window
-//   .matchMedia(mediaList.desktop)
-//   .addEventListener('change', handleTabletChange);
-// function handleTabletChange(e) {
-//   console.log(e);
-//   if (e.matches) {
-//     console.log('!!!');
-//   }
-// }
-
-// handleTabletChange(window.matchMedia(mediaList.mobile));
-// handleTabletChange(window.matchMedia(mediaList.tablet));
-// handleTabletChange(window.matchMedia(mediaList.desktop));
 
 export function checkResult(response) {
-  console.log(response);
   createMarkup(response);
 }
 
@@ -72,8 +41,10 @@ function createMarkup(response) {
       return this.months[date.getMonth()];
     },
   };
+
   const date = new Date();
-  const markup = `<div class="weather__widget">
+
+  const markup = `<li class="item item--weather"><div class="weather__widget">
   <div class="weather__content">
     <div class="weather__wrapper">
       <span class="temperature">${response.main.temp.toFixed(0)}&#176;</span>
@@ -97,23 +68,49 @@ function createMarkup(response) {
   )} ${date.getFullYear()}
     </div>
   </div>
-</div>`;
+</div>
+</li>`;
+
   showWeather(markup);
 }
 
 function showWeather(markup) {
-  if (window.innerWidth < 768) {
-    refs.list[0].insertAdjacentHTML('beforeend', markup);
+  if (mediaList.mobile.matches) {
+    checkScreenSize(markup);
+    return refs.listItems[0].insertAdjacentHTML('beforebegin', markup);
   }
-  if (window.innerWidth >= 768 && window.innerWidth < 1200) {
-    refs.list[1].insertAdjacentHTML('beforebegin', markup);
+  if (mediaList.tablet.matches) {
+    checkScreenSize(markup);
+    return refs.listItems[1].insertAdjacentHTML('beforebegin', markup);
+  }
+  if (mediaList.desktop.matches) {
+    checkScreenSize(markup);
+    return refs.listItems[4].insertAdjacentHTML('beforebegin', markup);
   } else {
-    refs.list[4].insertAdjacentHTML('beforebegin', markup);
+    console.log('!!!');
   }
 }
-// refs.weatherWidget.insertAdjacentHTML('beforeend', markup);
-// if (mediaQueryList.matches) {
-//   refs.list[1].insertAdjacentHTML('beforebegin', markup);
-// } else {
-//   refs.list[3].insertAdjacentHTML('afterend', markup);
-// }
+
+function checkScreenSize(markup) {
+  mediaList.mobile.addEventListener('change', show);
+  mediaList.tablet.addEventListener('change', show);
+  mediaList.desktop.addEventListener('change', show);
+
+  function show() {
+    if (mediaList.mobile.matches) {
+      console.log('its mobile');
+      document.querySelector('.item--weather').remove();
+      return refs.listItems[0].insertAdjacentHTML('beforebegin', markup);
+    }
+    if (mediaList.tablet.matches) {
+      console.log('its tablet');
+      document.querySelector('.item--weather').remove();
+      return refs.listItems[1].insertAdjacentHTML('beforebegin', markup);
+    }
+    if (mediaList.desktop.matches) {
+      console.log('its desktop');
+      document.querySelector('.item--weather').remove();
+      return refs.listItems[4].insertAdjacentHTML('beforebegin', markup);
+    }
+  }
+}

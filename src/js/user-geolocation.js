@@ -13,8 +13,6 @@ export function getUserLocation() {
 }
 
 function positionHandler(position) {
-  console.log(position);
-
   getCurrentWeather(position.coords).then(checkResult).catch(showError);
 }
 

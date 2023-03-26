@@ -8,8 +8,6 @@ const REQUEST_OPTIONS = {
 };
 
 export async function getCurrentWeather(position) {
-  console.log(position);
-
   REQUEST_OPTIONS.lat = position.latitude;
   REQUEST_OPTIONS.lon = position.longitude;
 
